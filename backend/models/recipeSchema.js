@@ -15,9 +15,11 @@ const recipeSchema = new Schema({
   },
   time: {
     type: String,
+    required: true,
   },
   coverImage: {
     type: String,
+    required: true,
   },
 });
 
