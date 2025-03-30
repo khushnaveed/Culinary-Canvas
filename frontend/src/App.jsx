@@ -8,6 +8,7 @@ import RecipePage from "./components/RecipePage";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthForm } from "./pages/AuthForm";
 import Unauthorized from "./components/Unauthorized";
+import AddRecipe from "./pages/AddRecipe";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,6 +52,8 @@ export default function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />{" "}
             {/* Unauthorized Route */}
             <Route path="/login" element={<AuthForm onLogin={handleLogin} />} />
+            <Route path="/addrecipe" element={isLoggedIn ? <AddRecipe /> : <Navigate to="/unauthorized" />} />
+
           </Routes>
           <Footer />
         </div>

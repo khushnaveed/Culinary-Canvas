@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RecipeCard from "../components/RecipeCard";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]); // Store the list of recipes
   const [loading, setLoading] = useState(true); // Track loading state
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     // Fetch the recipe data from the API
@@ -42,6 +44,12 @@ const Home = () => {
               Welcome to Culinary Canvas
             </h1>
             <p className="text-xl">Where Every Recipe Tells a Story</p>
+            <button
+              className="m-3 fspace-x-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+              onClick={() => navigate("/addrecipe")} // Navigate to Add Recipe page
+            >
+              <span>Share your Recipe</span>
+            </button>
           </div>
         </div>
       </div>
