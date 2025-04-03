@@ -19,7 +19,9 @@ export function AuthForm({ onLogin, setRedirectPath }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isLogin ? "http://localhost:5000/user/login" : "http://localhost:5000/user/signUp";
+    const url = isLogin
+      ? "http://localhost:5000/user/login"
+      : "http://localhost:5000/user/signUp";
 
     try {
       const response = await axios.post(url, { email, password });
@@ -41,9 +43,10 @@ export function AuthForm({ onLogin, setRedirectPath }) {
 
   return (
     <div
-      className="min-h-[80vh] flex items-center justify-center bg-cover bg-center"
+      className="min-h-[93vh] flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
       }}
     >
       <div className="absolute inset-0 bg-black/25 flex items-center justify-center z-0"></div>
@@ -91,7 +94,9 @@ export function AuthForm({ onLogin, setRedirectPath }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder={isLogin ? "Enter your password" : "Create a password"}
+                placeholder={
+                  isLogin ? "Enter your password" : "Create a password"
+                }
                 required
               />
             </div>

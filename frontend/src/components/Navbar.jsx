@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Home, UtensilsCrossed, Heart, LogIn, LogOut, Menu, X } from "lucide-react";
+import {
+  Home,
+  UtensilsCrossed,
+  Heart,
+  LogIn,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function Navbar({ onLogout, isLoggedIn }) {
   const [activeTab, setActiveTab] = useState("home");
@@ -67,7 +75,7 @@ export default function Navbar({ onLogout, isLoggedIn }) {
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                className="flex items-center space-x-1 px-4 py-2  bg-amber-500 text-white rounded-md hover:bg-red-600 transition duration-200"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const userSignUp = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { userName, email, password } = req.body;
     if (!email || !password) {
       return res
         .status(400)
@@ -31,13 +31,13 @@ export const userSignUp = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { userName, email, password } = req.body;
 
     // Validate input fields
-    if (!email || !password) {
+    if (!email || !password || !userName ) {
       return res
         .status(400)
-        .json({ message: "Email and password are required" });
+        .json({ message: "Username, email and password are required" });
     }
 
     // Find user by email

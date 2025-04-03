@@ -21,7 +21,7 @@ export default function App() {
   }, []);
 
   const handleLogin = () => {
-    setIsLoggedIn(true); // Update the login state
+    setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
@@ -52,8 +52,12 @@ export default function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />{" "}
             {/* Unauthorized Route */}
             <Route path="/login" element={<AuthForm onLogin={handleLogin} />} />
-            <Route path="/addrecipe" element={isLoggedIn ? <AddRecipe /> : <Navigate to="/unauthorized" />} />
-
+            <Route
+              path="/addrecipe"
+              element={
+                isLoggedIn ? <AddRecipe /> : <Navigate to="/unauthorized" />
+              }
+            />
           </Routes>
           <Footer />
         </div>

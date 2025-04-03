@@ -71,27 +71,65 @@ const RecipePage = () => {
   if (!recipe) return <p>Recipe not found.</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">{recipe.title}</h1>
-      <img
-        src={recipe.coverImage}
-        alt={recipe.title}
-        className="w-full h-64 object-cover rounded-lg mb-4"
-      />
-      <p className="text-gray-600">{recipe.time} minutes</p>
-      <h2 className="text-xl font-semibold mt-4">Ingredients</h2>
-      <ul className="list-disc pl-6">
-        {recipe.ingredients.map((ingredient, index) => (
-          <li key={index}>{ingredient}</li>
-        ))}
-      </ul>
-      <h2 className="text-xl font-semibold mt-4">Instructions</h2>
-      <ol className="list-decimal pl-6">
-        {recipe.instructions.map((step, index) => (
-          <li key={index}>{step}</li>
-        ))}
-      </ol>
+    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="max-w-6xl mx-auto px-4">
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          {/* Left Column - Recipe Details */}
+          <div className="md:w-1/2 p-6 md:p-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{recipe.title}</h1>
+            
+            <div className="flex items-center mb-6 text-gray-600">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{recipe.time} minutes</span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">Ingredients</h2>
+              <ul className="space-y-2">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="flex items-center text-gray-700">
+                    <span className="w-2 h-2 bg-amber-500 rounded-full mr-3"></span>
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Right Column - Image */}
+          <div className="md:w-1/2">
+            <div className="h-full">
+              <img
+                src={recipe.coverImage}
+                alt={recipe.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Instructions Section - Full Width */}
+        <div className="bg-gray-50 p-6 md:p-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Instructions</h2>
+          <ol className="space-y-4">
+            {recipe.instructions.map((step, index) => (
+              <li key={index} className="flex">
+                <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-amber-500 text-white rounded-full mr-3">
+                  {index + 1}
+                </span>
+                <span className="text-gray-700">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
     </div>
+  </div>
   );
 };
 

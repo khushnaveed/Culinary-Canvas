@@ -58,7 +58,7 @@ export default function Footer() {
                   placeholder="Enter your email"
                   className="px-4 py-2 rounded-l-md flex-grow text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <button className="bg-orange-500 text-white px-4 py-2 rounded-r-md hover:bg-orange-600 transition flex items-center">
+                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition flex items-center">
                   <Mail className="h-4 w-4 mr-2" />
                   Subscribe
                 </button>

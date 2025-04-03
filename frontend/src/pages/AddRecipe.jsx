@@ -1,32 +1,45 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  ChefHat,
+  Clock,
+  ImagePlus,
+  ListOrdered,
+  Loader2,
+  UtensilsCrossed,
+} from "lucide-react";
 
 const AddRecipe = () => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
-  const [ingredients, setIngredients] = useState("");  // Ingredients as a string
-  const [instructions, setInstructions] = useState("");  // Instructions as a string
+  const [ingredients, setIngredients] = useState("");
+  const [instructions, setInstructions] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // Convert ingredients and instructions to arrays
-    const ingredientsArray = ingredients.split(",").map((ingredient) => ingredient.trim());
-    const instructionsArray = instructions.split("\n").map((instruction) => instruction.trim());
+    const ingredientsArray = ingredients
+      .split(",")
+      .map((ingredient) => ingredient.trim())
+      .filter(Boolean);
 
-    // Prepare the recipe data
+    const instructionsArray = instructions
+      .split("\n")
+      .map((instruction) => instruction.trim())
+      .filter(Boolean);
+
     const recipeData = {
       title,
-      time,
-      ingredients: ingredientsArray,  // Store ingredients as an array
-      instructions: instructionsArray,  // Store instructions as an array
+      time: parseInt(time, 10),
+      ingredients: ingredientsArray,
+      instructions: instructionsArray,
       coverImage: imageUrl,
     };
 
@@ -36,143 +49,164 @@ const AddRecipe = () => {
         recipeData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token for authentication
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      // On success, navigate to the "My Recipes" page or display a success message
       if (response.status === 200) {
-        setLoading(false);
-        navigate("/myrecipes"); // Redirect to My Recipes page after successful submission
+        navigate("/myrecipes");
       }
     } catch (error) {
-      setLoading(false);
       setError(
         error.response?.data?.message ||
           "An error occurred while adding the recipe."
       );
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className="min-h-[80vh] flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/25 flex items-center justify-center z-0"></div>
-
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md z-10">
-        <h2 className="text-2xl font-bold text-center mb-6">Add Your Recipe</h2>
-
-        {error && <p className="text-center text-red-500 mb-4">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title Input */}
-          <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Recipe Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter the recipe title"
-              required
-            />
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')] bg-cover bg-center ">
+        <div className="bg-black/40 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <ChefHat className="h-12 w-12 text-white mx-auto mb-4" />
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Share Your Recipe
+              </h1>
+              <p className="text-xl text-gray-200">
+                Share your culinary masterpiece with food lovers around the
+                world
+              </p>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Time Input */}
-          <div>
-            <label
-              htmlFor="time"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Time
-            </label>
-            <input
-              type="text"
-              id="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter the time required"
-              required
-            />
-          </div>
+      {/* Form Section */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center">
+                <UtensilsCrossed className="h-5 w-5 text-red-500 mr-2" />
+                <p className="text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
 
-          {/* Ingredients Input */}
-          <div>
-            <label
-              htmlFor="ingredients"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Ingredients (comma-separated)
-            </label>
-            <textarea
-              id="ingredients"
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter ingredients, separated by commas"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <label className="block">
+                <span className="text-gray-700 font-medium">Recipe Title</span>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="mt-1 text-sm p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-amber-500 focus:outline-none focus:ring focus:ring-amber-200"
+                  placeholder="e.g., Homemade Chocolate Chip Cookies"
+                  required
+                />
+              </label>
 
-          {/* Instructions Input */}
-          <div>
-            <label
-              htmlFor="instructions"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Instructions (one per line)
-            </label>
-            <textarea
-              id="instructions"
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter instructions, separated by new lines"
-              required
-            />
-          </div>
+              <label className="block">
+                <span className="text-gray-700 font-medium">
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1" />
+                    Cooking Time (minutes)
+                  </div>
+                </span>
+                <input
+                  type="number"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="mt-1 text-sm p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-amber-500 focus:outline-none focus:ring focus:ring-amber-200"
+                  placeholder="E.g., 30"
+                  required
+                />
+              </label>
 
-          {/* Cover Image Input */}
-          <div>
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Cover Image URL
-            </label>
-            <input
-              type="text"
-              id="image"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              placeholder="Enter the image URL"
-              required
-            />
-          </div>
+              <label className="block">
+                <span className="text-gray-700 font-medium">
+                  <div className="flex items-center">
+                    <ListOrdered className="h-4 w-4 mr-1" />
+                    Ingredients
+                  </div>
+                </span>
+                <p className="text-sm text-gray-500 mb-2">
+                  Enter each ingredient, separated by commas
+                </p>
+                <textarea
+                  value={ingredients}
+                  onChange={(e) => setIngredients(e.target.value)}
+                  rows={4}
+                  className="mt-1 text-sm p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-amber-500 focus:outline-none focus:ring focus:ring-amber-200"
+                  placeholder="E.g., 2 cups flour, 1 cup sugar, 2 eggs"
+                  required
+                />
+              </label>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200"
-            disabled={loading}
-          >
-            {loading ? "Adding Recipe..." : "Add Recipe"}
-          </button>
-        </form>
+              <label className="block">
+                <span className="text-gray-700 font-medium">Instructions</span>
+                <p className="text-sm text-gray-500 mb-2">
+                  Enter each step on a new line
+                </p>
+                <textarea
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  rows={6}
+                  className="mt-1 text-sm p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-amber-500 focus:outline-none focus:ring focus:ring-amber-200"
+                  placeholder="1. Preheat oven to 350°F&#10;2. Mix dry ingredients&#10;3. Add wet ingredients"
+                  required
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-gray-700 font-medium">
+                  <div className="flex items-center">
+                    <ImagePlus className="h-4 w-4 mr-1" />
+                    Cover Image URL
+                  </div>
+                </span>
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="mt-1 text-sm p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:border-amber-500 focus:outline-none focus:ring focus:ring-amber-200"
+                  placeholder="https://example.com/image.jpg"
+                  required
+                />
+              </label>
+            </div>
+
+            <div className="flex items-center justify-end space-x-4 pt-4">
+              <button
+                type="button"
+                onClick={() => navigate("/myrecipes")}
+                className="px-4 py-2 text-gray-700 hover:text-gray-900 transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="m-3 fspace-x-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                    Adding Recipe...
+                  </>
+                ) : (
+                  "Add Recipe"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
