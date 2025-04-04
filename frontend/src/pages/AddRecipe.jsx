@@ -54,7 +54,7 @@ const AddRecipe = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate("/myrecipes");
       }
     } catch (error) {
@@ -92,8 +92,8 @@ const AddRecipe = () => {
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-center">
-                <UtensilsCrossed className="h-5 w-5 text-red-500 mr-2" />
-                <p className="text-red-700">{error}</p>
+                <UtensilsCrossed className="h-5 w-5 text-orange-500 mr-2" />
+                <p className="text-orange-500">{error}</p>
               </div>
             </div>
           )}
@@ -193,7 +193,7 @@ const AddRecipe = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="m-3 fspace-x-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                className="m-3 fspace-x-1 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition duration-200"
               >
                 {loading ? (
                   <>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export function AuthForm({ onLogin, setRedirectPath }) {
   const [isLogin, setIsLogin] = useState(true);
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -12,31 +13,46 @@ export function AuthForm({ onLogin, setRedirectPath }) {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.from) {
-      setRedirectPath(location.state.from); // Store the previous path
+    if (location.state?.from && typeof setRedirectPath === "function") {
+      setRedirectPath(location.state.from);
     }
   }, [location, setRedirectPath]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const url = isLogin
       ? "http://localhost:5000/user/login"
       : "http://localhost:5000/user/signUp";
 
+    const payload = isLogin
+      ? { email, password }
+      : { userName, email, password };
+
     try {
-      const response = await axios.post(url, { email, password });
+      const response = await axios.post(url, payload);
+
+      // DEBUG: Log response structure
+      console.log("API response:", response.data)
+
       const token = response.data.token;
-      if (token) {
+      const userId = response.data.userId;
+
+      if (token && userId) {
         localStorage.setItem("token", token);
-        onLogin(); // Call the onLogin callback from App.js to update the logged-in state
-        if (location.state?.from) {
-          navigate(location.state.from); // Redirect to the path they came from
-        } else {
-          navigate("/"); // Default redirect to home
-        }
+        localStorage.setItem("userId", userId);
+
+        onLogin?.();
+        console.log("Login successful");
+
+        const redirectTo = location.state?.from || "/";
+        console.log("Redirecting to:", redirectTo);
+        navigate(redirectTo);
+      } else {
+        setMessage("Invalid response from server.");
       }
-      setMessage(`${isLogin ? "Login" : "Signup"} successful! 🎉`);
     } catch (error) {
+      console.error("Login error:", error);
       setMessage(error.response?.data?.message || "An error occurred.");
     }
   };
@@ -49,14 +65,38 @@ export function AuthForm({ onLogin, setRedirectPath }) {
           "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
       }}
     >
-      <div className="absolute inset-0 bg-black/25 flex items-center justify-center z-0"></div>
+      <div className="absolute inset-0 bg-black/25 flex items-center justify-center z-0" />
 
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md z-10">
         <h2 className="text-2xl font-bold text-center mb-6">
           {isLogin ? "Welcome Back" : "Create Your Account"}
         </h2>
         {message && <p className="text-center text-red-500 mb-4">{message}</p>}
+
         <form onSubmit={handleSubmit} className="space-y-6">
+          {!isLogin && (
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Username
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  id="username"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  placeholder="Enter your username"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
           <div>
             <label
               htmlFor="email"
@@ -78,6 +118,7 @@ export function AuthForm({ onLogin, setRedirectPath }) {
               />
             </div>
           </div>
+
           <div>
             <label
               htmlFor="password"
@@ -94,13 +135,12 @@ export function AuthForm({ onLogin, setRedirectPath }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                placeholder={
-                  isLogin ? "Enter your password" : "Create a password"
-                }
+                placeholder={isLogin ? "Enter your password" : "Create a password"}
                 required
               />
             </div>
           </div>
+
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200"
@@ -108,6 +148,7 @@ export function AuthForm({ onLogin, setRedirectPath }) {
             {isLogin ? "Log In" : "Sign Up"}
           </button>
         </form>
+
         <p className="mt-4 text-center text-sm text-gray-600">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button

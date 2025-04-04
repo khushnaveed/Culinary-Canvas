@@ -15,6 +15,7 @@ export default function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
       setIsLoggedIn(true);
     }
@@ -27,6 +28,7 @@ export default function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
   };
 
   return (
@@ -50,13 +52,10 @@ export default function App() {
               }
             />
             <Route path="/unauthorized" element={<Unauthorized />} />{" "}
-            {/* Unauthorized Route */}
             <Route path="/login" element={<AuthForm onLogin={handleLogin} />} />
             <Route
               path="/addrecipe"
-              element={
-                isLoggedIn ? <AddRecipe /> : <Navigate to="/unauthorized" />
-              }
+              element={isLoggedIn ? <AddRecipe /> : <Navigate to="/login" />}
             />
           </Routes>
           <Footer />

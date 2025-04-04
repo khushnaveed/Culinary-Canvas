@@ -45,7 +45,7 @@ const Home = () => {
             </h1>
             <p className="text-xl">Where Every Recipe Tells a Story</p>
             <button
-              className="m-3 fspace-x-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+              className="m-3 fspace-x-1 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-red-600 transition duration-200"
               onClick={() => navigate("/addrecipe")} // Navigate to Add Recipe page
             >
               <span>Share your Recipe</span>

@@ -15,7 +15,7 @@ export default function Navbar({ onLogout, isLoggedIn }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    onLogout(); // Trigger the logout function passed from App.js
+    onLogout();
   };
 
   return (
@@ -75,7 +75,7 @@ export default function Navbar({ onLogout, isLoggedIn }) {
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-1 px-4 py-2  bg-amber-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                className="flex items-center space-x-1 px-4 py-2  bg-orange-500 text-white rounded-md hover:bg-red-600 transition duration-200"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>
