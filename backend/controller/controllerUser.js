@@ -2,13 +2,13 @@ import userModel from "../models/userSchema.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const userSignUp = async (req, res) => {
+/* export const userSignUp = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
-    if (!email || !password) {
+    if (!userName || !email || !password) {
       return res
         .status(400)
-        .json({ message: "Email and password is requried" });
+        .json({ message: "Username, Email and password is requried" });
     }
 
     const user = await userModel.findOne({ email });
@@ -28,16 +28,54 @@ export const userSignUp = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+ */
+
+export const userSignUp = async (req, res) => {
+  try {
+    const { userName, email, password } = req.body;
+    if (!userName || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username, Email and password are required" });
+    }
+
+    const user = await userModel.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "User already exists." });
+    }
+
+    const hashPwd = await bcrypt.hash(password, 10);
+    const newUser = await userModel.create({
+      userName,
+      email,
+      password: hashPwd,
+    });
+
+    const token = jwt.sign({ email, id: newUser._id }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    // ✅ Only send token and userId
+    return res.status(200).json({
+      token,
+      userId: newUser._id.toString(),
+      email: newUser.email,
+      userName: newUser.userName,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 export const userLogin = async (req, res) => {
   try {
-    const { userName, email, password } = req.body;
+    const { email, password } = req.body;
 
     // Validate input fields
-    if (!email || !password || !userName ) {
+    if (!email || !password) {
       return res
         .status(400)
-        .json({ message: "Username, email and password are required" });
+        .json({ message: "Email and password are required" });
     }
 
     // Find user by email
@@ -57,7 +95,12 @@ export const userLogin = async (req, res) => {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
-    return res.status(200).json({ token, newUser });
+    return res.status(200).json({
+      token,
+      userId: newUser._id.toString(),
+      email: newUser.email,
+      userName: newUser.userName,
+    });
   } catch (err) {
     console.error("Login error:", err.message);
     res.status(500).json({ success: false, message: "Internal Server Error" });

@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const recipeSchema = new Schema({
   title: {
     type: String,
-    requried: true,
+    required: true,
   },
   ingredients: {
     type: [String],
@@ -21,6 +21,10 @@ const recipeSchema = new Schema({
     type: String,
     required: true,
   },
+  createdBy:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
+  }
 });
 
 const recipeModel = model("recipe", recipeSchema);
